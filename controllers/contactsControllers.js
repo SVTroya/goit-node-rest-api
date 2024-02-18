@@ -1,43 +1,61 @@
 import contactsService from '../services/contactsServices.js'
 import HttpError from '../helpers/HttpError.js'
+import {ctrlWrapper} from '../decorators/ctrlWrapper.js'
 
-export const getAllContacts = async (req, res) => {
-  res.json(await contactsService.listContacts())
+async function getAllContacts(req, res) {
+  const result = await contactsService.listContacts();
+  res.json(result);
 }
 
-export const getOneContact = async (req, res) => {
+async function getOneContact(req, res) {
   const {id} = req.params
   const result = await contactsService.getContactById(id)
   if (!result) {
-    const error = HttpError(404)
-    res.status(error.status).json({message: error.message})
+    throw HttpError(404);
   }
 
   res.json(result)
 }
 
-export const deleteContact = async (req, res) => {
+async function deleteContact(req, res) {
   const {id} = req.params
   const result = await contactsService.removeContact(id)
   if (!result) {
-    const error = HttpError(404)
-    res.status(error.status).json({message: error.message})
+    throw HttpError(404)
   }
 
   res.json(result)
 }
 
-export const createContact = async (req, res) => {
+async function createContact(req, res) {
   res.status(201).json(await contactsService.addContact(req.body))
 }
 
-export const updateContact = async (req, res) => {
+async function updateContact(req, res) {
   const {id} = req.params
   const result = await contactsService.updateContact(id, req.body)
   if (!result) {
-    const error = HttpError(404)
-    res.status(error.status).json({message: error.message})
+    throw HttpError(404)
   }
 
   res.json(result)
+}
+
+async function updateStatusContact(req, res) {
+  const {id} = req.params
+  const result = await contactsService.updateContact(id, req.body)
+  if (!result) {
+    throw HttpError(404)
+  }
+
+  res.json(result)
+}
+
+export default {
+  getAllContacts: ctrlWrapper(getAllContacts),
+  getOneContact: ctrlWrapper(getOneContact),
+  deleteContact: ctrlWrapper(deleteContact),
+  createContact: ctrlWrapper(createContact),
+  updateContact: ctrlWrapper(updateContact),
+  updateStatusContact: ctrlWrapper(updateStatusContact),
 }
