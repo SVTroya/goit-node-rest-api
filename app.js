@@ -3,7 +3,11 @@ import morgan from 'morgan'
 import cors from 'cors'
 import contactsRouter from './routes/contactsRouter.js'
 import mongoose from 'mongoose'
+import dotenv from 'dotenv'
 import authRouter from './routes/authRouter.js'
+
+dotenv.config()
+const {DB_HOST, PORT} = process.env
 
 const app = express()
 
