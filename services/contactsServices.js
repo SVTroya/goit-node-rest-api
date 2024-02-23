@@ -1,29 +1,34 @@
-import {Contacts} from '../model/contacts.js'
+import {Contact} from '../model/Сontact.js'
 
-async function listContacts() {
-  return Contacts.find({})
+function getContactsByFilter(filter, query = {}) {
+  return Contact.find(filter, '-createdAt -updatedAt', query)
 }
 
-async function getContactById(contactId) {
-  return Contacts.findById(contactId)
+function getContactsCountByFilter(filter) {
+  return Contact.countDocuments(filter)
 }
 
-async function removeContact(contactId) {
-  return Contacts.findByIdAndDelete(contactId)
+function getContactByFilter(filter) {
+  return Contact.findById(filter, '-createdAt -updatedAt')
 }
 
-async function addContact(data) {
-  return Contacts.create(data)
+function removeContactByFilter(filter) {
+  return Contact.findOneAndDelete(filter)
 }
 
-async function updateContact(contactId, data) {
-  return Contacts.findByIdAndUpdate(contactId, data)
+function addContact(data) {
+  return Contact.create(data)
+}
+
+function updateContactByFilter(filter, data) {
+  return Contact.findOneAndUpdate(filter, data)
 }
 
 export default {
-  listContacts,
-  getContactById,
-  removeContact,
+  getContactsByFilter,
+  getContactsCountByFilter,
+  getContactByFilter,
+  removeContactByFilter,
   addContact,
-  updateContact
+  updateContactByFilter
 }

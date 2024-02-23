@@ -1,0 +1,19 @@
+import {Router} from 'express'
+import validateBody from '../helpers/validateBody.js'
+import authControllers from '../controllers/authControllers.js'
+import {signInSchema, signUpSchema} from '../schemas/usersSchemas.js'
+import {authenticate} from '../middlewares/authenticate.js'
+
+const authRouter = Router()
+
+authRouter.post('/register', validateBody(signUpSchema), authControllers.signUp)
+
+authRouter.post('/login', validateBody(signInSchema), authControllers.signIn)
+
+authRouter.get('/current', authenticate, authControllers.getCurrent)
+
+authRouter.post('/logout', authenticate, authControllers.signOut)
+
+authRouter.patch('/', authenticate, authControllers.changeSubscription)
+
+export default authRouter
