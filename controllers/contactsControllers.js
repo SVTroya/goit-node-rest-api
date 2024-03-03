@@ -1,6 +1,10 @@
 import contactsService from '../services/contactsServices.js'
 import HttpError from '../helpers/HttpError.js'
 import {ctrlWrapper} from '../decorators/ctrlWrapper.js'
+import path from 'path'
+import {rename} from 'fs/promises'
+
+const contactsDir = 'contactsPhoto'
 
 async function getAllContacts(req, res) {
   const {limit = 10, page = 1, favorite} = req.query
@@ -37,8 +41,18 @@ async function deleteContact(req, res) {
 }
 
 async function createContact(req, res) {
-  const {_id: owner} = req.user
-  res.status(201).json(await contactsService.addContact({...req.body, owner}))
+  const user = req.body
+  if (req.file) {
+    const {path: oldPath, filename} = req.file
+    const newPath = path.join(path.resolve('public', contactsDir), filename)
+    await rename(oldPath, newPath)
+    user.photo = path.join(contactsDir, filename)
+  }
+
+  user.owner = req.user
+  const {_id, name, email, phone, favorite, photo} = await contactsService.addContact(user)
+
+  res.status(201).json({_id, name, email, phone, favorite, photo})
 }
 
 async function updateContact(req, res) {

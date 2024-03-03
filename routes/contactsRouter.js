@@ -4,6 +4,7 @@ import {createContactSchema, updateContactSchema, updateFavoriteSchema} from '..
 import {isValidId} from '../middlewares/isValidId.js'
 import {Router} from 'express'
 import {authenticate} from '../middlewares/authenticate.js'
+import {upload} from '../middlewares/upload.js'
 
 const contactsRouter = Router()
 
@@ -15,7 +16,7 @@ contactsRouter.get('/:id', isValidId, contactsControllers.getOneContact)
 
 contactsRouter.delete('/:id', isValidId, contactsControllers.deleteContact)
 
-contactsRouter.post('/', validateBody(createContactSchema), contactsControllers.createContact)
+contactsRouter.post('/', upload.single('photo'), validateBody(createContactSchema), contactsControllers.createContact)
 
 contactsRouter.put('/:id', isValidId, validateBody(updateContactSchema), contactsControllers.updateContact)
 

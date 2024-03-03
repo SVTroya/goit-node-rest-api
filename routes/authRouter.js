@@ -3,6 +3,7 @@ import validateBody from '../helpers/validateBody.js'
 import authControllers from '../controllers/authControllers.js'
 import {signInSchema, signUpSchema} from '../schemas/usersSchemas.js'
 import {authenticate} from '../middlewares/authenticate.js'
+import {upload} from '../middlewares/upload.js'
 
 const authRouter = Router()
 
@@ -14,6 +15,8 @@ authRouter.get('/current', authenticate, authControllers.getCurrent)
 
 authRouter.post('/logout', authenticate, authControllers.signOut)
 
-authRouter.patch('/', authenticate, authControllers.changeSubscription)
+authRouter.patch('/favorite', authenticate, authControllers.changeSubscription)
+
+authRouter.patch('/avatars', upload.single('avatarURL'), authenticate, authControllers.changeAvatar)
 
 export default authRouter

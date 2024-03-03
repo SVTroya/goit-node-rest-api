@@ -27,7 +27,11 @@ const contactSchema = new Schema({
     owner: {
       type: Schema.Types.ObjectId,
       ref: 'user',
-      required: [true, 'Owner is required'],
+      required: [true, 'Owner is required']
+    },
+    photo: {
+      type: String,
+      default: null
     }
   },
   {
