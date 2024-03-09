@@ -16,9 +16,14 @@ function changeAvatar(id, avatarURL) {
   return User.findByIdAndUpdate(id, {avatarURL})
 }
 
+function updateUser(filter, data) {
+  return User.findOneAndUpdate(filter, data)
+}
+
 export default {
   findUser,
   findUserById,
   changeSubscription,
-  changeAvatar
+  changeAvatar,
+  updateUser
 }

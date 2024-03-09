@@ -1,13 +1,17 @@
 import {Router} from 'express'
 import validateBody from '../helpers/validateBody.js'
 import authControllers from '../controllers/authControllers.js'
-import {signInSchema, signUpSchema} from '../schemas/usersSchemas.js'
+import {signInSchema, signUpSchema, verifySchema} from '../schemas/usersSchemas.js'
 import {authenticate} from '../middlewares/authenticate.js'
 import {upload} from '../middlewares/upload.js'
 
 const authRouter = Router()
 
 authRouter.post('/register', validateBody(signUpSchema), authControllers.signUp)
+
+authRouter.get("/verify/:verificationToken", authControllers.verify);
+
+authRouter.post("/verify", validateBody(verifySchema), authControllers.resendVerifyEmail);
 
 authRouter.post('/login', validateBody(signInSchema), authControllers.signIn)
 
